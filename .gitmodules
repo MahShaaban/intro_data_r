@@ -1,0 +1,9 @@
+[submodule "slides/basic_statistics_in_r"]
+	path = slides/basic_statistics_in_r
+	url = https://git.overleaf.com/6259fee1f632582b5660b04b
+[submodule "slides/getting_started_in_r"]
+	path = slides/getting_started_in_r
+	url = https://git.overleaf.com/6259fe50f63258608160a2d6
+[submodule "overleaf"]
+	path = overleaf
+	url = https://git.overleaf.com/626c8e35b8fddd77171cc994

@@ -1,0 +1,389 @@
+---
+title: "Basic statistics in R"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE, fig.width = 5, fig.height = 5, fig.align = 'center')
+
+# global variable
+# create a grouping variable
+d <- data.frame(
+  V1 = 1:30,
+  V2 = rnorm(30, mean = 0, sd = 1),
+  V3 = rep(c('A', 'B'), each = 15)
+)
+
+d2 <- d
+
+d2$V2 <- ifelse(d2$V3 == 'B', d2$V2 + 2, d2$V2)
+```
+
+## What is statistics? 
+
+Statistics is the practice concerned with collecting and analyzing data. The
+interactive document is not strictly about statistics but rather, about doing
+the basic statistical summarizing and testing in R. We will only be looking at
+a few ideas in statistics that will be needed for the upcoming modules. Namely
+
+- Summarizing data
+- Measuring variance
+- Applying statistical tests
+- Plotting data
+
+We will start from where we ended in the previous module. The code below creates
+three variables and collect them in a `data.frame`. You can think of this object
+`d` as encoding an experimental data. In the following sense
+
+- `V1` the sample ID
+- `V2` measurements
+- `V3` a grouping variable
+
+```{r df,echo=TRUE}
+# create an index variable
+V1 <- 1:30
+
+# create a random variable
+set.seed(123) # do not remove this line
+V2 <- rnorm(30, mean = 0, sd = 1)
+
+# create a grouping variable
+V3 <- rep(c('A', 'B'), each = 15)
+
+# create a data.frame d
+d <- data.frame(V1, V2, V3)
+
+# examine the object d
+str(d)
+```
+
+Next, we will introduce some bias in the measurements and try to explore and 
+retrieve it using statistical tools. Here is a code that adds 1 to the 
+measurements of the group `'B'`, and leaves `'A'` as is.
+
+```{r df2,echo=TRUE}
+# copy object d to d2
+d2 <- d
+
+# add 1 to V2 when V3 == 'B'
+d2[, 'V2'] <- ifelse(d[, 'V3'] == 'B',
+                     d[, 'V2'] + 2,
+                     d[, 'V2'])
+
+str(d2)
+```
+
+Use `str`, `head` or `tail` to check whether the code above produced what it 
+aims to do. In the next section, we will use summary statistics to explore the
+bias we introduce between the groups using different statistical and visual 
+tools.
+
+## Summary statistics 
+
+Summarizing data is a sensible starting point when dealing with many data points
+. Two useful summary statistics are averages and variances.
+
+### Averages
+
+Averages are single numbers that describe a list of numbers. There are more than
+one way of defining it.
+
+1. Mean: the sum divided by the length
+2. Median: the value separating the higher half from the lower half
+3. Mode: the value that appears most often
+
+There are in R functions that correspond to the first two of these statistics. 
+These are `mean` and `median`.
+
+Here is the code to calculate the mean for all measurements and for each of the
+two groups in the data A and B.
+
+```{r ave1,exercise=TRUE}
+# calculate the mean of V2
+mean(d2$V2)
+
+# calculate the mean of the V2 for each group
+mean(d2$V2[d2$V3 == 'A'])
+mean(d2$V2[d2$V3 == 'B'])
+```
+
+Now try to calculate the other average statistic, `median`, for the same groups.
+
+```{r ave2,exercise=TRUE}
+# calculate the median of V2
+
+# calculate the median of the V2 for each group
+
+```
+
+```{r ave2-solution}
+# calculate the median of V2
+median(d2$V2)
+
+# calculate the median of the V2 for each group
+median(d2$V2[d2$V3 == 'A'])
+median(d2$V2[d2$V3 == 'B'])
+```
+
+Now try to answer these questions based on what you've done.
+
+```{r quiz1}
+quiz(
+  question(
+    text = "How does the median compare to the mean of V2?",
+    answer("Median bigger than mean"),
+    answer("Median smaller than mean", correct = TRUE),
+    answer("Median equal to mean")
+  ),
+  question(
+    text = "How does the median of group 'B' compare to group 'A'?",
+    answer("Median bigger than mean", correct = TRUE),
+    answer("Median smaller than mean"),
+    answer("Median equal to mean")
+  )
+)
+```
+
+These single numbers tell us something about the center of the data point. Other
+statistics can tell us about how much the data points vary from each other. We 
+turn to this next.
+
+### Variance
+
+Variance is a measure of dispersion, meaning it is a measure of how far a set of
+numbers is spread out from their average value.
+
+There functions `var` and `sd`, stand for variance and standard deviation.
+
+Here is the code to calculate the variance and the stardard deviation for all 
+measurements
+
+```{r var1,exercise=TRUE}
+# calculate the variance of V2
+var(d2$V2)
+
+# calculate the standard deviation of V2
+sd(d2$V2)
+```
+
+Now try to calculate the these same statistics for the groups A and B.
+
+```{r var2,exercise=TRUE}
+# calculate the variance and standard deviation for group A
+
+# calculate the variance and standard deviation for group B
+
+```
+
+```{r var2-solution}
+# calculate the variance and standard deviation for group A
+var(d2$V2[d2$V3 == 'A'])
+sd(d2$V2[d2$V3 == 'A'])
+
+# calculate the variance and standard deviation for group B
+var(d2$V2[d2$V3 == 'B'])
+sd(d2$V2[d2$V3 == 'B'])
+```
+
+Now try to answer these questions based on what you've done.
+
+```{r quiz2}
+quiz(
+  question(
+    text = "Which of the two groups has higher variance?",
+    answer("A"),
+    answer("B", correct = TRUE),
+    answer("A and B has equal variance")
+  ),
+  question(
+    text = "How does the variance relate to the standard deviation?",
+    answer("Variance is the standard deviation squared", correct = TRUE),
+    answer("Standard deviation is the variance squared"),
+    answer("Variance is equal to the standard deviation")
+  )
+)
+```
+
+Point statistics, single number summaries, are very useful. But there are other 
+ways to get a feel of how the data itself look like. One way is to use graphs
+to explore the data. We will be discussing some of the graphing (plotting) 
+tools in the next section.
+
+## Plots 
+
+There are many different to visualize any set of data. The basic graphs such as
+bar, line and scatter plots are indispensable. Used in the right way and context
+they can be very illuminating and once your data is large enough, graphs like 
+these will be the only way to look into the data and the relationships between
+the variables.
+
+### Bar plot
+
+Inspect the help page of the function `barplot` to see how to map the data to 
+the bars.
+
+```{r bar1,exercise=TRUE}
+# inspect help page of barplot
+```
+
+The only required argument you need to pass to `barplot` is called `height`, the
+rest is optional (to make the plot look pretty). Here is an example
+
+```{r bar2,echo=TRUE}
+# plot 1 to 3
+barplot(1:3)
+```
+
+Now, try plotting the `mean`s of the variable `d2$V2` for each group in `d2$V3`.
+Remember, you can can calculate the means just like before and save the results
+in a variable of your choice, then pass this variable to `barplot`
+
+```{r bar3,exercise=TRUE}
+# calculate the group means
+
+# plot the group means
+```
+
+```{r bar3-solution}
+# calculate the group means
+m <- c(
+  mean(d2$V2[d2$V3 == 'A']),
+  mean(d2$V2[d2$V3 == 'B'])
+)
+
+# plot the group means
+barplot(m)
+```
+
+The exercise above made it look easy to plot numbers in R. Truth be told it is
+rarely the case that a single line of code would produce anything like a decent
+graph. You'd have to modify it using other functions to make it informative.
+
+The code below shows some embellishment in the above graph, just to show you how
+it's done. But we won't be spending much time on it. I encourage you however to 
+modify and execute the code to see how each function works.
+
+```{r bar4,exercise=TRUE}
+# calculate the group means
+m <- c(
+  mean(d2$V2[d2$V3 == 'A']),
+  mean(d2$V2[d2$V3 == 'B'])
+)
+
+# plot the group means
+barplot(m,
+        xlab = 'Group',
+        ylab = 'Measurement',
+        main = 'Embellished Bar Plot',
+        ylim = c(0, 2))
+axis(side = 1,
+     at = c(.7, 1.9),
+     labels = c('A', 'B'))
+box()
+```
+
+### Point plot
+
+Another basic plot you can make is the point plot. The function `plot` creates
+points with two coordinates x and y.
+
+Here is code to to plot all three variables in the object `d2`, which we created
+earlier. The code puts `V1` on the x-axis, `V2` on the y-axis and color by `V3`.
+
+```{r point,echo=TRUE}
+# plot all three variables
+# as factor is necessary to force A and B to colors
+plot(x = d2$V1,
+     y = d2$V2,
+     col = as.factor(d2$V3))
+```
+
+Modify the code below to change the x to 'Variable 1' and y to 'Variable 2'. 
+You will need to pass these labels to the arguments `xlab` and `ylab`.
+
+```{r point2,exercise=TRUE}
+# plot all three variables
+# as factor is necessary to force A and B to colors
+plot(x = d2$V1,
+     y = d2$V2,
+     col = as.factor(d2$V3))
+```
+
+### Histogram plot
+
+The third and last type of plot we will discuss is called a histogram. 
+Histograms count the frequency of data points within specified ranges. In other 
+word, it divides the data into ranges called bins and count how many occur in
+each of these bins
+
+```{r hist,echo=TRUE}
+# draw a histogram
+hist(d2$V2[d2$V3 == 'A'],
+     xlab = 'Range of variable 2',
+     main = 'Histogram of V2')
+```
+
+Here is a question to test your understanding of histograms. One of these
+can be answered directly for the histogram above, the second will require you
+to make a tiny modification of the code.
+
+```{r quiz3}
+quiz(
+  question(
+    text = "What is the bin of the highest frequency in V2?",
+    answer('-1 to 0'),
+    answer('0 to 1', correct = TRUE),
+    answer('1 to 2')
+  ),
+  question(
+    text = "True or false: most of A values are above 0.5?",
+    answer('True'),
+    answer('False', correct = TRUE)
+  )
+)
+```
+
+## Tests 
+
+Looking at the mean, variance, and the plots we made, you can easily till that 
+the bias we introduced in the group 'B' is there. Now, we introduced this 
+difference intentionally. But in most cases, this would be the exact question we
+as of the data. Is there a difference between the measurements in group A to B.
+
+One way to answer this kind of question is to use statistical tests. 
+
+Choosing which test to use, indeed whether you should use tests at all or 
+whether the mean anything is beyond the topic at hand.
+
+Here is code that applies the a t-test to the two groups, A and B.
+
+```{r test,exercise=TRUE}
+# extract group values
+A <- d2$V2[d2$V3 == 'A']
+B <- d2$V2[d2$V3 == 'B']
+
+# apply t.test
+t.test(B, A)
+```
+
+Check the help page of the `t.test` function and try to interpret the output of
+the test above.
+
+```{r quiz4}
+quiz(
+  question(
+    text = "What is the estimated difference in mean A and B?",
+    answer('4.49'),
+    answer('1.6', correct = TRUE),
+    answer('0.00013')
+  ),
+  question(
+    text = "Is the difference between B and A significant at P < 0.001?",
+    answer('Yes', correct = TRUE),
+    answer('No'),
+    answer('Not sure')
+  )
+)
+```

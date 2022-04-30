@@ -1,0 +1,124 @@
+---
+title: "Homework 4: two images at once "
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+library(colocr)
+image1_file <- system.file('extdata', 'Image0001_.jpg', package = 'colocr')
+image2_file <- system.file('extdata', 'Image0003_.jpg', package = 'colocr')
+```
+
+
+To process a collection of images at once, we only need to make tiny changes to
+the workflow that we have been following
+
+- First, load multiple images in a list
+- Second, pass the selection parameters as a list if they differ from one image 
+to another.
+
+Let's first start by loading the images in a single list. I located the files
+in character vector and named it `img_files`. 
+
+```{r img_files,echo=TRUE}
+# locate image files
+img_files <- c(image1_file, image2_file)
+```
+
+Use this object with `image_load` to create an `img_list`
+
+```{r files,echo=TRUE}
+# locate image files
+img_files <- c(image1_file, image2_file)
+```
+
+```{r load5,exercise=TRUE,exercise.setup='files'}
+# load two images at once
+```
+
+```{r load5-solution}
+# load two images at once
+img_list <- image_load(img_files)
+```
+
+Now we will select the regions of interest and test applying the same parameters
+to both images. Only set `threshold = 90` and leave the rest with the default
+values.
+
+```{r imgs}
+# load two images at once
+img_files <- c(image1_file, image2_file)
+img_list <- image_load(img_files)
+```
+
+```{r list,exercise=TRUE,exercise.setup="imgs"}
+# call roi_select
+
+# call roi_test
+```
+
+```{r list-solution}
+# call roi_select
+imgs_roi <- roi_select(img_list, threshold = 90)
+
+# call roi_test
+roi_test(imgs_roi)
+```
+
+You might however want to assign separate parameter values to each image. In
+this case, you need to path a vector of the same length as the images instead of
+a single value.
+
+```{r list2,exercise=TRUE,exercise.setup="imgs"}
+# declare thresholds for each image
+threshold_list <- c(90, 85)
+
+# call roi_select
+
+# call roi_test
+```
+
+```{r list2-solution}
+# declare thresholds for each image
+threshold_list <- c(90, 85)
+
+# call roi_select
+imgs_roi <- roi_select(img_list, threshold = threshold_list)
+
+# call roi_test
+roi_test(imgs_roi)
+```
+
+Changing the threshold value in `roi_select` often results in different value of
+the co-localization statistics. Therefore, you should inspect the parameters 
+sensibly and often check how they change the selected regions. We discussed the 
+`roi_show` which is designed for this purpose. 
+
+Modify the code above and answer the following questions.
+
+```{r quiz}
+quiz(
+  question(
+    text = "What is the PCC value of 'image_2.jpg' at threshold 90?",
+    answer("0.87"),
+    answer("0.85", correct = TRUE),
+    answer("0.83")
+  ),
+  question(
+    text = "What is the PCC value of 'image_2.jpg' at threshold 85?",
+    answer("0.87", correct = TRUE),
+    answer("0.85"),
+    answer("0.83")
+  ),
+  question(
+    text = "What is the MOC value of 'image_2.jpg' at threshold 90?",
+    answer("0.93"),
+    answer("0.94", correct = TRUE),
+    answer("0.95")
+  )
+)
+```
+

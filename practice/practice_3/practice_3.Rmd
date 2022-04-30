@@ -1,0 +1,442 @@
+---
+title: "Quantifying mRNA using the `pcr` package"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+library(pcr)
+```
+
+
+## Overview
+
+Quantitative real-time PCR is an important technique in medical and bio-medical
+applications. The `pcr` package provides a unified interface for quality 
+assessing, analyzing and testing qPCR data for statistical significance.
+
+The aim of this interactive document is to familiarize you with coding examples
+of how to analyze qPCR data using the `pcr` package.
+
+This figure comes from a paper I published on the subject. The paper describes
+the analysis methods and implementation in detail and you are welcome to read it
+. We will be focusing only on parts 2 and 3 (Modeling and testing.)
+
+```{r workflow,fig.align='center',out.width="70%",fig.cap="A conceptual workflow of the analysis of RT-qPCR data"}
+knitr::include_graphics('https://dfzljdn9uc3pi.cloudfront.net/2018/4473/1/fig-3-2x.jpg')
+```
+
+**References**
+
+1. Ahmed M, Kim DR. pcr: an R package for quality assessment, analysis and 
+testing of qPCR data. PeerJ. 2018 Mar 16;6:e4473. 
+doi: [10.7717/peerj.4473](https://pubmed.ncbi.nlm.nih.gov/29576953/).
+2. Livak KJ, Schmittgen TD. Analysis of relative gene expression data using 
+real-time quantitative PCR and the 2(-Delta Delta C(T)) Method. Methods. 2001
+Dec;25(4):402-8. 
+doi: [10.1006/meth.2001.1262](https://pubmed.ncbi.nlm.nih.gov/11846609/). 
+3. Yuan JS, Reed A, Chen F, Stewart CN Jr. Statistical analysis of real-time PCR
+data. BMC Bioinformatics. 2006 Feb 22;7:85. 
+doi: [10.1186/1471-2105-7-85](https://pubmed.ncbi.nlm.nih.gov/16504059/). 
+
+## Recap: double delta $C_T$ method  
+
+Remember, the comparative $C_T$ methods makes three assumptions
+
+1. cDNA templates have similar amplification efficiency.
+2. Amplification efficiency is near perfect.
+3. The expression difference between two genes or two samples can be captured by subtracting one (gene or sample of interest) from another (reference).
+
+This means that at a certain threshold during the linear portion of the PCR
+reaction, the amount of the gene of the interest and the control double each cycle. 
+
+The formal derivation of the double delta $C_T$ model is described here [Livak2001]. Briefly,
+
+The $\Delta\Delta C_T$ is given by:  
+
+$$
+\Delta\Delta C_T = \Delta C_{T,q} - \Delta C_{T,cb}
+$$
+
+And the relative expression by:  
+
+$$
+2^{-\Delta\Delta C_T}
+$$
+
+Where:  
+
+- $\Delta C_{T,q}$ is the difference in the $C_T$ (or their \underline{average})
+of a *gene* of interest and a *reference* gene in a group of interest    
+- $\Delta C_{T,cb}$ is the the difference in the $C_T$ (or their \underline{average}) of a *gene* of interest and a *reference* gene in a
+*reference* group   
+
+And the error term is given by: 
+
+$$
+s = \sqrt{s_1^2 + s_2^2}
+$$
+
+Where:  
+
+- $s_1$ is the \underline{standard deviation} of a *gene* of interest      
+- $s_2$ is the \underline{standard deviation} of a *reference* gene   
+
+If you have been following thus far, you should be able to get some of the following questions right. Try them out
+
+```{r quiz-1}
+quiz(
+  caption = "Quiz 1",
+  question(
+  text = "What is amplification efficiency?",
+  answer("The ability of the reaction to amplify a certain amount of input RNA in a sample.", correct = TRUE),
+  answer("The ability of the reaction to continue indefinitely.")
+),
+question(
+  text = "What does CT stand for?",
+  answer("Cycle Time"),
+  answer("Cycle Threshold", correct = TRUE),
+  answer("Cycle Temprature")
+),
+question(
+  text = "What is a good reference gene?",
+  answer("Expression sensitive to treatment"),
+  answer("Expression does not change with treatment", correct = TRUE)
+),
+question(
+  text = "In the model above, where does the first difference (delta) come frome?",
+  answer("The gene of interest - control", correct = TRUE),
+  answer("The treatment condition - control"),
+  answer("Two different thresholds")
+)
+)
+```
+
+In the next section, you will learn about the `pcr` package and `pcr_analyze` 
+function that implement the $\Delta\Delta C_T$ model.
+
+## Analyzing $C_T$ values
+
+In this section, we will be using the `pcr` package to analyze $C_T$ values of
+C-Myc (MYC) in brain and kidney cells. The goal is to estimate the relative 
+expression of the gene these cells.
+
+Remember, to use an R package, you need to first load it into your workspace. So
+go on and load `pcr` using the command `library`.
+
+```{r library, exercise=TRUE}
+# load library
+```
+
+```{r library-solution}
+# load library
+library(pcr)
+```
+
+The first thing you want to do when working with a new package or function is to
+check the help pages provided by the author. The easiest way to do that is to 
+use the function `?` (question mark) followed by the name of the package. 
+
+Go on and check the help page of the `pcr` package.
+
+```{r help, exercise=TRUE}
+# get to the help page of pcr
+```
+
+```{r help-solution}
+# get to the help page of pcr
+?pcr
+```
+
+To apply the double delta $C_T$ model, we will be using the function 
+`pcr_analyze` with the default options.
+
+Just like the code above, try to get to the help page of the `pcr_analyze`
+function.
+
+```{r help2, exercise=TRUE}
+# get to the help page of pcr_analyze
+```
+
+```{r help2-solution}
+# get to the help page of pcr_analyze
+?pcr_analyze
+```
+
+The main input is a `data.frame` with columns containing the genes and the rows 
+the $C_T$ values from different samples. The `pcr` package provide a few 
+datasets that fit this format. If you loaded the library correctly, these 
+datasets will automatically be available to you. The dataset we will be using in
+this exercise is called `ct1`. '
+
+Let's make sure this dataset fits the description above. 
+
+Inspect the dimensions of the data.frame, `ct1`, using `dim`
+
+```{r dim, exercise=TRUE}
+# show dimensions of ct1
+```
+
+```{r dim-solution}
+# show dimensions of ct1
+dim(ct1)
+```
+
+```{r quiz-2}
+question(
+  text = "How many rows and columns are in the data.frame?",
+  answer("2 and 12"),
+  answer("12 and 2", correct = TRUE)
+)
+```
+
+To see how the data look like, go on and inspect the first three rows of the
+data.frame using `head`
+
+```{r head, exercise=TRUE}
+# show first three rows of ct1
+```
+
+```{r head-solution}
+# show first three rows of ct1
+head(ct1, n = 3)
+```
+
+In addition, a group variable `group_var` corresponding to these rows/samples is
+required. The first 6 rows of this dataset come from brain tissue and the
+remainder from kidney tissue. You need to construct a `character` vector to 
+encode this information. 
+
+One way to do that is to repeat `'brain'` and `'kidney'` 6 times each and wrap 
+them in a vector using `c()`. Alternatively, you can use the `rep` function with
+the argument `each`. Give it a try.
+
+```{r groupvar, exercise=TRUE}
+# create a group variable
+```
+
+```{r groupvar-solution}
+# create a group variable
+group_var <- rep(c('brain', 'kidney'), each = 6)
+```
+
+Finally, we need to specify a `reference_gene` and a `reference_group`. The 
+group can be either of the two in `group_var`. I will be using `'brain'` as a
+reference.
+
+```{r quiz-3}
+question(
+  text = "Which of the two genes would you choose as a reference?",
+  answer("c_myc"),
+  answer("GAPDH", correct = TRUE)
+)
+```
+
+Now, we can put all these pieces together in one function call to `pcr_analyze`.
+Go on and run this code and inspect the output.
+
+```{r call-setup}
+group_var <- rep(c('brain', 'kidney'), each = 6)
+```
+
+```{r call, exercise=TRUE}
+# calculate all values and errors in one step
+res <- pcr_analyze(ct1,
+                   group_var = group_var,
+                   reference_gene = 'GAPDH',
+                   reference_group = 'brain')
+
+knitr::kable(res, digits = 2)
+```
+
+The output of `pcr_analyze` is 8 columns. Look at the output carefully and guess
+the answers to the following questions.
+
+```{r quiz-4}
+quiz(
+  caption = 'Quiz 2',
+  question(
+    text = "Which tissue has higher expression of MYC?",
+    answer("Brain"),
+    answer("Kidney", correct = TRUE)
+  ),
+  question(
+    text = "What is the error term of MYC expression in the brain?",
+    answer("0.10"),
+    answer("0.89"),
+    answer("0.17", correct = TRUE)
+  ),
+  question(
+    text = "What is 'relative_expression' relative to?",
+    answer("The reference gene"),
+    answer("The reference group"),
+    answer("Both", correct = TRUE)
+  )
+)
+```
+
+This output table is easy to inspect since we only have on gene of interest and
+two conditions. However, it won't be that easy once you have more the one gene
+or multiple conditions. In the following section, we will learn how to make a 
+bar graph with the information provided in the output table.
+
+## Visualizing relative expression
+
+Let's quickly review the code we used so far. We loaded the `pcr` package, 
+created a group variable of the conditions, and made a call to `pcr_analyze`. 
+This function required four different inputs
+
+1. `ct1`: the data.frame with the $C_T$ values
+2. `group_var`: a variable with as many items as the number of rows in `ct1`
+3. `reference_gene` which we sat as `'GAPDH'`
+4. `reference_group` which we sat as `'brain'`
+
+Go on and execute the code below and see if you get similar results.
+
+```{r analyze, exercise=TRUE}
+# load library
+library(pcr)
+
+# create a group variable
+group_var <- rep(c('brain', 'kidney'), each = 6)
+
+# calculate all values and errors in one step
+res <- pcr_analyze(ct1,
+                   group_var = group_var,
+                   reference_gene = 'GAPDH',
+                   reference_group = 'brain')
+
+knitr::kable(res, digits = 2)
+```
+
+This last line uses `knitr::kable()` to display the output in nicer way.
+
+The `pcr_analyze` functions provide other options. One of which is to display 
+the output as a bar graph. All you need to do is to call the function with the 
+same inputs and set the argument `plot = TRUE`. Try it out.
+
+```{r call2-setup}
+library(pcr)
+group_var <- rep(c('brain', 'kidney'), each = 6)
+```
+
+```{r call2,exercise=TRUE}
+# set plot = TRUE in pcr_analyze
+```
+
+```{r call2-solution}
+# set plot = TRUE in pcr_analyze
+pcr_analyze(ct1,
+            group_var = group_var,
+            reference_gene = 'GAPDH',
+            reference_group = 'brain',
+            plot = TRUE)
+```
+
+Here, bars represent the average relative expression of MYC in the kidney, 
+normalized by GAPDH and calibrated by the expression in the brain. The error 
+bars are the standard deviations.  
+
+```{r quiz5}
+quiz(
+  caption = "Quiz 3",
+  question(
+    text = "What happens in the graph when you change the reference group to kidney?",
+    answer("The groups on the x-axis flips."),
+    answer("The scale of the y-axis changes.", correct = TRUE)
+  ),
+  question(
+    text = "How is MYC relatively expressed in the brain relative to the kidney?",
+    answer("Lower", correct = TRUE),
+    answer("Higher")
+  )
+)
+```
+
+Now, the difference in expression here is large and easy to judge. We can be 
+confident of that just looking at the table or the graph. In some cases, you 
+would want to apply a significance test and get a p-value. The `pcr` package 
+provide another convient function called `pcr_test` to do that. We will be doing
+that next.
+
+## Testing statistical significance
+
+Testing for statistical significance between conditions is important to ensure 
+validity and replicability of the analysis. Different statistical methods 
+require different assumptions. So the choice of which test to use depends on 
+many factors
+
+1. The number of the conditions/groups
+2. The sample and replicate sizes 
+3. The type of desired comparison
+
+In the previous sections, we calculated the double delta $C_T$. The following
+code repeats these calculations. Rerun it and examin the output
+
+```{r analyze2, exercise=TRUE}
+# load library
+library(pcr)
+
+# create a group variable
+group_var <- rep(c('brain', 'kidney'), each = 6)
+
+# calculate all values and errors in one step
+res <- pcr_analyze(ct1,
+                   group_var = group_var,
+                   reference_gene = 'GAPDH',
+                   reference_group = 'brain')
+
+knitr::kable(res, digits = 2)
+```
+
+`pcr_test` provides a unified interface to different testing methods. We will be
+using a simple `t.test` to compare the relative expression of MYC in brain and
+kidney tissue. 
+
+Just like before, we call `pcr_test` with the same inputs. Give it a try and
+compare the output put table to that of `pcr_analyze`.
+
+```{r call3-setup}
+library(pcr)
+group_var <- rep(c('brain', 'kidney'), each = 6)
+```
+
+```{r call3,exercise=TRUE}
+# run pcr_test
+```
+
+```{r call3-solution}
+# run pcr_test
+pcr_test(ct1,
+         group_var = group_var,
+         reference_gene = 'GAPDH',
+         reference_group = 'brain')
+```
+
+That's all there is to it. If you ran the code above correctly, you should get a
+1 by 5 output table and be able to answer the following questions about it.
+
+```{r quiz4}
+quiz(
+  caption = 'Quiz 4',
+  question(
+    text = "What cycles are necessary to double the amount of MYC RNA in kidney compared to brain tissue?",
+    answer('2.495 cycles more'),
+    answer('2.495 cycles less', correct = TRUE),
+    answer('2.68 cycles less')
+  ),
+  question(
+    text = "Does MYC expression significantly differ in kidney and brain tissue at a p-value cutoff (P < 0.001)?",
+    answer("Yes", correct = TRUE),
+    answer("No"),
+    answer("Cannot tell")
+  ),
+  question(
+    text = "What is the upper and lower bounds of the difference in cycle numbers above?",
+    answer("-2.68	and -2.31"),
+    answer("-2.31 and -2.68", correct = TRUE)
+  )
+)
+```

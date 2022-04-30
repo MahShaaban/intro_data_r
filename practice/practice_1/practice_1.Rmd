@@ -1,0 +1,525 @@
+---
+title: "Getting started in R"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## What is R? 
+
+You can think of R as a fancy calculator. One that can perform operations on not
+just numbers but all types of data. 
+
+Here are a few reasons why, learning to do data analysis in R can be useful to
+you.
+
+- Store, manipulate, analyze and visualize data
+- Scale data analysis
+- Benefit from open-source tools and methods
+- Reproducible analysis
+
+Notice however that most of these benefits can be accrued from many other tools.
+
+Once you get over the hurdle of expressing your experimental design in code, you
+will come to appreciate how easy it is to do data analysis.
+
+There are a few things you need to know to get started using R. But there is 
+much more that you will need to learn once you know what to look for. In this 
+document we will go through some of these basic concepts.
+
+## Variables 
+
+To drive home the calculator metaphor, look at the following line of code.
+
+```{r var1,echo=TRUE}
+1 + 2
+```
+
+The code above just adds one plus one, just like a calculator. Take a look at 
+the code below, and notice how it is different from the one before.
+
+```{r var2,echo=TRUE}
+x <- 1
+x + 2
+```
+
+`x` here is a variable and it contains the value we assign to it using this
+symbol `<-`. Adding `x` and `2` gives the same results as `1 + 2`. Using 
+variables rather than typing the values  is necessary for reasons that will
+become clear later. But here is a flavor of it. Type `x` in the box below and
+inspect the results.
+
+```{r x}
+x <- 1
+```
+
+```{r var3,exercise=TRUE,exercise.setup='x'}
+# type x and run the code
+```
+
+```{r quest-1}
+question("What is the value of x?",
+  answer('1', correct = TRUE),
+  answer('"1"'),
+  answer('x')
+)
+```
+
+The value of `x` stays the same as long as you don't change it. So you can use
+it over and over in your code. This will become very important once you have
+many data points inside the variable. Which brings us to the next topic, 
+"Functions".
+
+## Functions 
+
+Say you want to assign multiple values to `x`. For that you need a function
+called `c`, it stands for combine. In fact, whenever you want to do anything in
+R, you should be first looking at the function that does it. If there isn't one
+you can create it yourself. Let's see how this works.
+
+Here is a code that stores the values `1`, `2`, and `3` in a variable called `x`
+and prints it out.
+
+```{r fun1,echo=TRUE}
+x <- c(1, 2, 3)
+x
+```
+
+`x` is no longer a single value, but three. Thanks to the function `c` which
+combines any number of values you put between parenthesis, `()`, separated by 
+commas, `,`.
+
+Let's take a look at two other functions. `sum` takes a variable and returns its
+sum, `length` takes a variable and returns its length. Try them out.
+
+```{r fun2, execise=TRUE}
+# make a variable x
+x <- c(1, 2, 3)
+
+# call sum
+sum(x)
+
+# call length
+length(x)
+```
+
+I think you can appreciate now why storing values in variables can be useful.
+We achieved this through the function `c`. But functions can do much more. They
+can sum and count how many items in a variable.
+
+Let's use one more, a function called `mean`. It takes a variable and returns 
+its mean (average). `x` is now assigned big numbers at its probably difficult
+to guess the average, so try calling `mean` on `x`
+
+```{r fun3,exercise=TRUE}
+# make a variable x
+x <- c(154, 223, 309)
+
+# call sum
+```
+
+```{r fun3-solution}
+# make a variable x
+x <- c(154, 223, 309)
+
+# call sum
+mean(x)
+```
+
+```{r quest-2}
+question(
+  text = "What is the mean of the variable x?",
+  answer("686"),
+  answer("223"),
+  answer("228.67", correct = TRUE)
+)
+```
+
+Imagine however that no such function as `mean` exist. Then you can think of a
+way to compute your target using existing functions. Knowing that the mean of a
+variable it the sum divided by the length. Can you think of a way to compute it?
+
+Here is a hint: the output of a function is itself a variable and functions can
+be combined in one line to produce other variables.
+
+Remember
+
+- `sum` calculates the sum of items in a variable
+- `length` counts in the number of items in a variable
+- `/` is used for division just like `+` for addition
+
+```{r fun4,exercise=TRUE}
+# make a variable x
+x <- c(154, 223, 309)
+
+# compute the mean
+```
+
+```{r fun4-solution}
+# make a variable x
+x <- c(154, 223, 309)
+
+# compute the mean
+sum(x) / length(x)
+```
+
+Your output should match the one we got using `mean`. If so, you might want to 
+save this way of computing the mean in a new function to be able to use it 
+later. 
+
+There is a function called `function` that is used to create a function. Just in
+the last sentence, I have used the word "function" three times. You might be 
+surprised to discover that it is much easier to express that thought in the form
+of code.
+
+```{r fun5,echo=TRUE}
+# create a function to compute the mean
+newfun <- function(x) sum(x) / length(x)
+
+# call new fun
+x <- c(154, 223, 309)
+newfun(x)
+```
+
+Congratulations. You just created your first R function. This function `newfun`
+takes as an input a variable `x` and computes its mean. It does that by dividing
+the sum by the length of the variable.
+
+```{r quest-3}
+question(
+  text = "What does x refer to in function(x)?",
+  answer("The variable x we created before."),
+  answer("Any variable we pass to newfun."),
+  answer("Any variable of numbers we pass to newfun.", correct = TRUE)
+)
+```
+
+The answer to this question takes us straight to the next section.
+
+## Data types 
+
+So far we have been working with variables that consist of numbers. But there
+are other types of variable we could create. The most basic ones are
+
+1. Numeric: are real numbers such as 1.1, 1.2, or 1.3
+2. Integer: are whole numbers such as 1, 2, or 3
+3. Character: are strings of letters such as 'name', 'age', or 'gender'
+4. Logical: are either TRUE or FALSE
+
+Let's create some variables and examine the differences between them.
+
+```{r types1,echo=TRUE}
+# create a numeric
+num <- c(1.1, 1.2, 1.3)
+
+# create an integer
+int <- c(1L, 2L, 3L)
+
+# create a character
+char <- c('name', 'age', "gender")
+
+# create a logical
+logi <- c(TRUE, TRUE, FALSE)
+```
+
+```{r vars}
+# create a numeric
+num <- c(1.1, 1.2, 1.3)
+
+# create an integer
+int <- c(1L, 2L, 3L)
+
+# create a character
+char <- c('name', 'age', "gender")
+
+# create a logical
+logi <- c(TRUE, TRUE, FALSE)
+```
+
+Notice that although we can use the same function `c` to create all variables, 
+each has to be coded in a specific way. For example
+
+- Integers are signified by `L` after the number
+- Characters are enclosed between single quotes `''` or double quotes `""`
+- Logicals are upper case without quotes
+
+These variables also behave differently. You will come to appreciate them in
+time since they make things easier when it comes to data analysis.
+
+To confirm what type a variable is, use the function `class`. Here is an example
+
+```{r types2,exercise=TRUE,exercise.setup='vars'}
+# examine a variable class
+class(num)
+```
+
+```{r quest-4}
+question(
+  text = "What is the class of the variables int, char, and logi?",
+  answer("numeric, character, and logical."),
+  answer("integer, character, and logical.", correct = TRUE),
+  answer("factor, character, and logical.")
+)
+```
+
+You can convert some data types into others. Often a function `as.<class>` exist
+to do just that. For example there are `as.integer`, `as.numeric`, 
+`as.character` and `as.logical`. Try calling these functions on the variable 
+`num` and examine the output.
+
+```{r types3,exercise=TRUE,exercise.setup='vars'}
+# call as.integer
+as.integer(num)
+
+# call as.character
+
+# call as.logical
+
+```
+
+```{r quest-5}
+quiz(
+  question(
+    text = "What happens when you call as.integer(num)?",
+    answer("Same number are returned."),
+    answer("Integer part of the numbers are returned.", correct = TRUE)
+  ),
+  question(
+    text = "What happens when you call as.character(num)?",
+    answer("Same number are returned."),
+    answer("Same number are returned as strings between quotes.", correct = TRUE)
+  ),
+  question(
+    text = "What happens when you call as.logical(num)?",
+    answer("Same number are returned."),
+    answer("TRUE is repeated as many times as there are items in num.", correct = TRUE)
+  )
+)
+```
+
+You might be wondering why these variables behave the way they do. Mainly, each
+of these types has a direct analogy in the real world data you will be analyzing
+they make life easier for you and your computer, but at cost of a bit of 
+confusion such as the one you feel right now.
+
+To give you an idea, what if we want to tell which of the values in `num` equals 
+or differs from a number. There we can use operators such as `==`, `>` or `<`.
+Although the inputs are all `numeric`, the output will be `logical`. Check the 
+following code to see for yourself.
+
+```{r types4,exercise=TRUE,exercise.setup='vars'}
+# which value in num is equal to 1.2
+num == 1.2
+
+# which value in num is bigger than 1.2
+
+# which value in num is smaller 1.2
+```
+
+```{r types4-solution}
+# which value in num is equal to 1.2
+num == 1.2
+
+# which value in num is bigger than 1.2
+num > 1.2
+
+# which value in num is smaller 1.2
+num < 1.2
+```
+
+Each of the variables (`vector`s) above had one type of data in them. These are
+simple ways of encoding data and very useful as well. However, most of the time
+data will come in tables, and in mixed types: numbers, characters and all. The
+next section will take you through one way to have tables with different types 
+of data in them.
+
+## Data frames 
+
+`data.frames` are basically tables. The consist of rows and columns. Columns can
+have different types of data. While learning to do data analysis in R, 
+`data.frames` are probably the most important data structure and the most 
+commonly used.
+
+Let's see an example of how to build one from scratch.
+
+```{r frame1,echo=TRUE}
+# make variables
+x <- rep(c(1, 2), each = 3)
+x
+
+y <- rep(c('A', 'B'), each = 3)
+y
+
+# make a data.frame
+d <- data.frame(x, y)
+d
+```
+
+```{r df}
+# make variables
+x <- rep(c(1, 2), each = 3)
+x
+
+y <- rep(c('A', 'B'), each = 3)
+y
+
+# make a data.frame
+d <- data.frame(x, y)
+d
+```
+
+The `data.frame` we just created consist of two columns: `x` and `y`. We created
+`x` and `y` by repeating two values `c(1, 2)` and `c('A', 'B')` 3 times each.
+The function `data.frame`, takes as input the columns returns, well, a 
+`data.frame`.
+
+This object, `d`, is small, so you can print it in its entirety without a 
+problem. However this is not always the case. The function `str` can show you
+the most important info you need about the object without having to print it out
+on the screen.
+
+```{r frame2,exercise=TRUE,exercise.setup='df'}
+# call str on the object d
+```
+
+```{r frame2-solution}
+# call str on the object d
+str(d)
+```
+
+From the output above, you should be able to answer the following question.
+
+```{r quiz-6}
+quiz(
+  question(
+  text = "How many rows and columns are there in the object d?",
+  answer("6 and 2", correct = TRUE),
+  answer("2 and 6"),
+  answer("1 and 2"),
+  random_answer_order = TRUE
+),
+question(
+  text = "How many observations and variables are there in the object d?",
+  answer("6 and 2", correct = TRUE),
+  answer("2 and 6"),
+  answer("1 and 2"),
+  random_answer_order = TRUE
+),
+question(
+  text = "How what are the data types of columns in the object d?",
+  answer("Numeric and character", correct = TRUE),
+  answer("Charcters only"),
+  answer("Numerics only"),
+  random_answer_order = TRUE
+)
+)
+```
+
+That's it about `data.frame`s for now. We will be using them in the practice
+problems. But firs, you need to learn how to break them down into pieces,
+otherwise known as "subsetting"
+
+## Subsetting 
+
+Just like there is a way to build bigger objects, there is a way to subset them.
+Why would you need to do that? Well, you may want to have a look at a slice of
+the object, filter out some unwanted data, or test your code on parts of the 
+object before applying it to the whole dataset.
+
+Here is the same code to generate the object `d` as before.
+
+```{r frame3,echo=TRUE}
+# make variables
+x <- rep(c(1, 2), each = 3)
+y <- rep(c('A', 'B'), each = 3)
+
+# make a data.frame
+d <- data.frame(x, y)
+
+# show the structure of d
+str(d)
+```
+
+Say we are only interested in the first column, `x`. Here, is a way to subset it
+from `d` and create a new `data.frame` called `dx`. Run the code and call `str`
+on the output.
+
+```{r frame4,exercise=TRUE,exercise.setup='df'}
+# subset first column
+dx <- d[, 1]
+str(dx)
+```
+
+Now do the same for the column `y` and call it `dy`.
+
+```{r frame5,exercise=TRUE,exercise.setup='df'}
+# subset second column
+```
+
+```{r frame5-solution}
+# subset second column
+dy <- d[, 2]
+str(dy)
+```
+
+```{r quiz-7}
+question(
+  text = "What is the data type of dy?",
+  answer("Character", correct = TRUE),
+  answer("Numerics"),
+  answer("data.frame"),
+  random_answer_order = TRUE
+)
+```
+
+To subset the first row of the object `d`, you do something similar.
+
+```{r frame6,exercise=TRUE,exercise.setup='df'}
+# subset the first row
+```
+
+```{r frame6-solution}
+# subset the first row
+d[1,]
+```
+
+In the code above, we used square bracket `[]` and inside them, the indecies of
+the columns or rows we needed.
+
+You can subset a `data.frame` by column and rows at once. You can also get more
+then one column or row at once. Just substitute the index between `[]` with a
+vector of more then one index. Try this out.
+
+```{r frame7,exercise=TRUE,exercise.setup='df'}
+# subset the first three rows and two columns
+```
+
+```{r frame7-solution}
+# subset the first row
+d[c(1, 2, 3), c(1,2)]
+
+# or
+d[1:3, 1:2]
+```
+
+There are other ways to subset `data.frame`s. Indeed there is much more to learn
+about them. One aspect of mastering a language like R is to be able to find help
+on your own. This will be the topic of the next section.
+
+## Getting help 
+
+One of the benefits of using a statistical programming language is that you are
+never alone. Pretty much any kind of analysis you would wish to do someone else
+has thought of. This also applies to learning the syntax of the language and 
+solving the common issues that beginner face. 
+
+These are ways to get help
+
+- Type a question mark `?` followed by the name of a package, function, or class
+- Copy and paste errors and warnings into your preferred search engine
+- Trial and error
+

@@ -1,0 +1,135 @@
+---
+title: "Homework 3: same genes, different data"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+library(pcr)
+```
+
+
+Now that you've learned to use `pcr` functions to analyze, visualize and test
+$C_T$ values, you are ready to perform the full analysis on your own. 
+
+The following is a description of the problem you need to solve. The data and
+code are very similar to what you have seen in previous sections with one 
+wrinkle. Read the description bellow and see if you can spot the difference. 
+Once you do that, you will need to find a way to modify the code to accommodate
+this difference and complete the analysis properly.
+
+The goal of this exercise is to use `pcr_analyze` and `pcr_test` to calculate
+the double delta $C_T$ value of the gene of interest in the `ct2` dataset. This 
+dataset is very similar to `ct1`, however, they differ in one important aspect.
+You will need to read the help pages of these datasets and figure out what this 
+difference is and modify your code accordingly.
+
+Here, are a few things you need to keep in mind
+
+1. You need to load the `pcr` library to get access to the data and functions
+2. To get the help page use `?` followed by the name of the dataset or function
+3. To modify the behavior of a function, check the relevant arguments
+4. `pcr_analyze` is just an interface for other functions. The one relevant to 
+this exercise is `pcr_ddct`
+
+The following is just an R prompt for you to work in.
+
+```{r practice, exercise=TRUE}
+# load pcr library
+
+
+# inspect the data.frame ct2
+# decide which is the reference gene
+
+# compare the help pages of ct1 to ct2
+# how the data were generated
+
+
+# get the help page of pcr_ddct
+# find the relevant argument to modify
+
+
+# make a group variable for ct2
+# decide which is the reference group
+
+
+# call pcr_analyze
+
+
+# call pcr_test
+
+
+```
+
+```{r practice-hint}
+# load pcr library
+library(pcr)
+
+# inspect the data.frame ct2
+# decide which is the reference gene
+head(ct2, n = 3)
+
+# compare the help pages of ct1 to ct2
+# how the data were generated
+?ct2
+?ct1
+
+# get the help page of pcr_ddct
+# find the relevant argument to modify
+?pcr_ddct
+
+# make a group variable for ct2
+# decide which is the reference group
+group_var <- rep(c('brain', 'kidney'), each = 6)
+
+# call pcr_analyze
+pcr_analyze(ct2,
+            group_var = group_var,
+            reference_gene = 'GAPDH',
+            reference_group = 'brain',
+            mode = 'same_tube')
+
+# call pcr_test
+pcr_test(ct2,
+         group_var = group_var,
+         reference_gene = 'GAPDH',
+         reference_group = 'brain')
+```
+
+Now based on your results try and answer the following questions
+
+```{r quiz6}
+quiz(
+  caption = 'Practice',
+  question(
+    text = "What is the caliberated expression difference between kidney and brain?",
+    answer("-2.53", correct = TRUE),
+    answer("2.53"),
+    answer("4.47"),
+    answer("No idea")
+  ),
+  question(
+    text = "What is the relative expression of MYC in kidney compared to brain tissue?",
+    answer("1.0"),
+    answer("6.99"),
+    answer("5.77", correct = TRUE),
+    answer("IDK")
+  ),
+  question(
+    text = "What is the p-value after applying t-test to the expression difference?",
+    answer("Above 0.00001"),
+    answer("Below 0.00001", correct = TRUE),
+    answer("Not sure")
+  ),
+  question(
+    text = "What is the confidnece interval of the estimated expression difference?",
+    answer("-1.76 to -1.29"),
+    answer("-2.76 to -2.29", correct = TRUE),
+    answer("-2.3 to -2.5"),
+    answer("Who Knows?")
+  )
+)
+
+```

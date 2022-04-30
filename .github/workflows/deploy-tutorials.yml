@@ -1,0 +1,26 @@
+# this file deploys the tutorials to shinyapps.io
+
+on: [push, pull_request]
+
+name: Deploy tutorials
+
+jobs:
+  deploy-shiny:
+    runs-on: ubuntu-latest
+    container: rocker/verse:latest
+    steps:
+      - name: Install git-lfs
+        run: apt-get update && apt-get install git-lfs
+      - uses: actions/checkout@v2
+        with:
+          lfs: true
+      - name: Install shiny & friends
+        run: |
+          install.packages(c("shiny", "rmarkdown", "rsconnect"))
+          install.packages(c("learnr", "pcr", "colocr"))
+        shell: Rscript {0}
+      - name: Push to shinyapps.io
+        run: |
+          Rscript -e "rsconnect::setAccountInfo(name='bcmslab', token=${{secrets.SHINYAPPS_TOKEN}}, secret=${{secrets.SHINYAPPS_SECRET}})"
+          Rscript -e "lapply(list.files('practice/', full.names = TRUE), function(x) rsconnect::deployDoc(x))"
+          Rscript -e "lapply(list.files('homework/', full.names = TRUE), function(x) rsconnect::deployDoc(x))"
