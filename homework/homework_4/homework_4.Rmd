@@ -12,13 +12,14 @@ image1_file <- system.file('extdata', 'Image0001_.jpg', package = 'colocr')
 image2_file <- system.file('extdata', 'Image0003_.jpg', package = 'colocr')
 ```
 
-
 To process a collection of images at once, we only need to make tiny changes to
-the workflow that we have been following
+the workflow that we have been following.
 
 - First, load multiple images in a list
 - Second, pass the selection parameters as a list if they differ from one image 
 to another.
+
+---
 
 Let's first start by loading the images in a single list. I located the files
 in character vector and named it `img_files`. 
@@ -43,6 +44,8 @@ img_files <- c(image1_file, image2_file)
 # load two images at once
 img_list <- image_load(img_files)
 ```
+
+---
 
 Now we will select the regions of interest and test applying the same parameters
 to both images. Only set `threshold = 90` and leave the rest with the default
@@ -93,9 +96,11 @@ roi_test(imgs_roi)
 ```
 
 Changing the threshold value in `roi_select` often results in different value of
-the co-localization statistics. Therefore, you should inspect the parameters 
+the co-localization statistics. Therefore, you should select the parameters 
 sensibly and often check how they change the selected regions. We discussed the 
 `roi_show` which is designed for this purpose. 
+
+---
 
 Modify the code above and answer the following questions.
 
@@ -121,4 +126,3 @@ quiz(
   )
 )
 ```
-

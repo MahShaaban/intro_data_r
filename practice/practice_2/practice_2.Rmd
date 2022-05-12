@@ -24,18 +24,21 @@ d2$V2 <- ifelse(d2$V3 == 'B', d2$V2 + 2, d2$V2)
 ## What is statistics? 
 
 Statistics is the practice concerned with collecting and analyzing data. The
-interactive document is not strictly about statistics but rather, about doing
-the basic statistical summarizing and testing in R. We will only be looking at
-a few ideas in statistics that will be needed for the upcoming modules. Namely
+interactive practice is not strictly about statistics but rather, about doing
+the basic statistical summarizing and testing in R.
+
+We will only be looking at a few ideas in statistics that we need for the 
+upcoming modules. Namely
 
 - Summarizing data
-- Measuring variance
-- Applying statistical tests
 - Plotting data
+- Applying statistical tests
+
+---
 
 We will start from where we ended in the previous module. The code below creates
 three variables and collect them in a `data.frame`. You can think of this object
-`d` as encoding an experimental data. In the following sense
+`d` as encoding data from an experiment. In the following sense
 
 - `V1` the sample ID
 - `V2` measurements
@@ -76,9 +79,8 @@ str(d2)
 ```
 
 Use `str`, `head` or `tail` to check whether the code above produced what it 
-aims to do. In the next section, we will use summary statistics to explore the
-bias we introduce between the groups using different statistical and visual 
-tools.
+aims to do. In the next section, we will use "summary statistics" to explore the
+bias we introduce between the groups.
 
 ## Summary statistics 
 
@@ -94,11 +96,13 @@ one way of defining it.
 2. Median: the value separating the higher half from the lower half
 3. Mode: the value that appears most often
 
-There are in R functions that correspond to the first two of these statistics. 
+----
+
+There are functions in R that correspond to the first two of these statistics. 
 These are `mean` and `median`.
 
 Here is the code to calculate the mean for all measurements and for each of the
-two groups in the data A and B.
+two groups in the data 'A' and 'B'.
 
 ```{r ave1,exercise=TRUE}
 # calculate the mean of V2
@@ -127,7 +131,7 @@ median(d2$V2[d2$V3 == 'A'])
 median(d2$V2[d2$V3 == 'B'])
 ```
 
-Now try to answer these questions based on what you've done.
+Answer the following questions based on what you have done.
 
 ```{r quiz1}
 quiz(
@@ -147,18 +151,20 @@ quiz(
 ```
 
 These single numbers tell us something about the center of the data point. Other
-statistics can tell us about how much the data points vary from each other. We 
+statistics can tell us how much the data points vary from each other. We 
 turn to this next.
 
 ### Variance
 
-Variance is a measure of dispersion, meaning it is a measure of how far a set of
-numbers is spread out from their average value.
+Variance is a measure of dispersion, meaning how far a set of numbers is spread 
+out from their average value.
+
+---
 
 There functions `var` and `sd`, stand for variance and standard deviation.
 
-Here is the code to calculate the variance and the stardard deviation for all 
-measurements
+Here is the code to calculate the variance and the standard deviation for all 
+measurements.
 
 ```{r var1,exercise=TRUE}
 # calculate the variance of V2
@@ -168,7 +174,7 @@ var(d2$V2)
 sd(d2$V2)
 ```
 
-Now try to calculate the these same statistics for the groups A and B.
+Now try to calculate the these same statistics for the groups 'A' and 'B'.
 
 ```{r var2,exercise=TRUE}
 # calculate the variance and standard deviation for group A
@@ -187,7 +193,7 @@ var(d2$V2[d2$V3 == 'B'])
 sd(d2$V2[d2$V3 == 'B'])
 ```
 
-Now try to answer these questions based on what you've done.
+You should be able to answer these questions below based on the code above.
 
 ```{r quiz2}
 quiz(
@@ -207,16 +213,16 @@ quiz(
 ```
 
 Point statistics, single number summaries, are very useful. But there are other 
-ways to get a feel of how the data itself look like. One way is to use graphs
-to explore the data. We will be discussing some of the graphing (plotting) 
+ways to get a feel of how the data itself looks like. One way is to use graphs
+to explore the data. We will be discussing some of the graphing ("Plots") 
 tools in the next section.
 
 ## Plots 
 
-There are many different to visualize any set of data. The basic graphs such as
+There are many ways to visualize any set of data. The basic graphs such as
 bar, line and scatter plots are indispensable. Used in the right way and context
-they can be very illuminating and once your data is large enough, graphs like 
-these will be the only way to look into the data and the relationships between
+plots can be very illuminating. Once your data is large enough, graphs like 
+these will be the only way to explore the data and the relationships between
 the variables.
 
 ### Bar plot
@@ -257,11 +263,11 @@ m <- c(
 barplot(m)
 ```
 
-The exercise above made it look easy to plot numbers in R. Truth be told it is
+The exercise above made it look easy to plot numbers in R. Truth be told, it is
 rarely the case that a single line of code would produce anything like a decent
 graph. You'd have to modify it using other functions to make it informative.
 
-The code below shows some embellishment in the above graph, just to show you how
+The code below shows some embellishment to the above graph, just to show you how
 it's done. But we won't be spending much time on it. I encourage you however to 
 modify and execute the code to see how each function works.
 
@@ -287,7 +293,7 @@ box()
 ### Point plot
 
 Another basic plot you can make is the point plot. The function `plot` creates
-points with two coordinates x and y.
+points with two coordinates 'x' and 'y'.
 
 Here is code to to plot all three variables in the object `d2`, which we created
 earlier. The code puts `V1` on the x-axis, `V2` on the y-axis and color by `V3`.
@@ -300,8 +306,9 @@ plot(x = d2$V1,
      col = as.factor(d2$V3))
 ```
 
-Modify the code below to change the x to 'Variable 1' and y to 'Variable 2'. 
-You will need to pass these labels to the arguments `xlab` and `ylab`.
+Modify the code below to change the labels of 'x' and 'y' to 'Variable 1' and 
+'Variable 2'. You will need to pass these labels to the arguments `xlab` and 
+`ylab`.
 
 ```{r point2,exercise=TRUE}
 # plot all three variables
@@ -315,8 +322,10 @@ plot(x = d2$V1,
 
 The third and last type of plot we will discuss is called a histogram. 
 Histograms count the frequency of data points within specified ranges. In other 
-word, it divides the data into ranges called bins and count how many occur in
-each of these bins
+word, it divides the data into ranges called 'bins' and count how many  data 
+points occur in each bin.
+
+The function `hist` can do that for you.
 
 ```{r hist,echo=TRUE}
 # draw a histogram
@@ -327,7 +336,7 @@ hist(d2$V2[d2$V3 == 'A'],
 
 Here is a question to test your understanding of histograms. One of these
 can be answered directly for the histogram above, the second will require you
-to make a tiny modification of the code.
+to make a tiny modification to the code.
 
 ```{r quiz3}
 quiz(
@@ -347,17 +356,19 @@ quiz(
 
 ## Tests 
 
-Looking at the mean, variance, and the plots we made, you can easily till that 
+Looking at the mean, variance, and plots we made, you can easily tell that 
 the bias we introduced in the group 'B' is there. Now, we introduced this 
 difference intentionally. But in most cases, this would be the exact question we
-as of the data. Is there a difference between the measurements in group A to B.
+ask of the data. Is there a difference between the measurements of the groups?
 
 One way to answer this kind of question is to use statistical tests. 
+
+---
 
 Choosing which test to use, indeed whether you should use tests at all or 
 whether the mean anything is beyond the topic at hand.
 
-Here is code that applies the a t-test to the two groups, A and B.
+Here is code that applies the a t-test to the two groups, 'A' and 'B'.
 
 ```{r test,exercise=TRUE}
 # extract group values
@@ -368,8 +379,7 @@ B <- d2$V2[d2$V3 == 'B']
 t.test(B, A)
 ```
 
-Check the help page of the `t.test` function and try to interpret the output of
-the test above.
+Check the help page of the `t.test` function and try to interpret its output.
 
 ```{r quiz4}
 quiz(

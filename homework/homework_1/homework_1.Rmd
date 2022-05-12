@@ -9,23 +9,26 @@ library(learnr)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-In this practice section, we will be building a `data.frame`. I will describe 
-the final shape of this object and give you some hints on which functions to use
-. However, as you learned in the previous sections, there are ways to find more
-about the functions you will be using, `?<function>` being the fastest one.
+In this homework problem, we will be building a `data.frame`. I will describe 
+the final shape of the object and give you some hints on which functions to use.
+However, as you learned in the previous sections, there are ways to find more
+about the functions you need, `?<function>` being the fastest one.
 
-Here is what you need to do
+---
+
+Here is what you need to do:
 
 1. Create a `data.frame` with three columns and 30 rows.
 2. The columns names should be `V1`, `V2` and `V3`.
-3. `V1` will only be an ID variable that contains the number of the rows.
+3. `V1` will only be an ID variable that contains the numbers of the rows.
 4. `V2` will be a random variable with mean 0, and a standard deviation of 1.
 5. `V3` will repeat the letters 'A' and 'B', 15 times each.
 
 You can check the functions `:`, `rnorm` and `rep`. Some of these we have used 
-before, but some we have not. The `?` is your friend. Below is an R console for
-you to write and run the code. Once you have it, you can move on to the 
-questions below.
+before, but some are new. The `?` is your friend. 
+
+Below is an R console for you to write and run the code. Once you have it, you 
+can move on to the questions below.
 
 ```{r practice,exercise=TRUE}
 # create V1
@@ -53,11 +56,11 @@ V3 <- rep(c('A', 'B'), each = 15)
 d <- data.frame(V1, V2, V3)
 ```
 
-If everything went fine, you should have 30 by 3 `data.frame`. Check out you
-have it write using `str` in the console above. The questions will require you
+If everything went fine, you should have a 30 by 3 `data.frame`. Check you
+have it right using `str` in the console above. The questions will require you
 to do subsetting as described before and perform some numerical operations. None
 of the functions you need is new. You only need to figure out which pieces to 
-use from the ones we discussed in this and in previous sections
+use from the ones we have discussed in the practice.
 
 ```{r quiz}
 quiz(

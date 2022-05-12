@@ -10,15 +10,16 @@ knitr::opts_chunk$set(echo = FALSE)
 library(pcr)
 ```
 
-
 Now that you've learned to use `pcr` functions to analyze, visualize and test
 $C_T$ values, you are ready to perform the full analysis on your own. 
 
 The following is a description of the problem you need to solve. The data and
-code are very similar to what you have seen in previous sections with one 
+code are very similar to what you have seen in the practice session with one 
 wrinkle. Read the description bellow and see if you can spot the difference. 
 Once you do that, you will need to find a way to modify the code to accommodate
 this difference and complete the analysis properly.
+
+---
 
 The goal of this exercise is to use `pcr_analyze` and `pcr_test` to calculate
 the double delta $C_T$ value of the gene of interest in the `ct2` dataset. This 
@@ -29,7 +30,7 @@ difference is and modify your code accordingly.
 Here, are a few things you need to keep in mind
 
 1. You need to load the `pcr` library to get access to the data and functions
-2. To get the help page use `?` followed by the name of the dataset or function
+2. To get the help page, use `?` followed by the name of the dataset or function
 3. To modify the behavior of a function, check the relevant arguments
 4. `pcr_analyze` is just an interface for other functions. The one relevant to 
 this exercise is `pcr_ddct`
@@ -98,7 +99,7 @@ pcr_test(ct2,
          reference_group = 'brain')
 ```
 
-Now based on your results try and answer the following questions
+Now based on your results, try to answer the following questions.
 
 ```{r quiz6}
 quiz(

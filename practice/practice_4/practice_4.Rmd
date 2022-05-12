@@ -16,14 +16,15 @@ image2_file <- system.file('extdata', 'Image0003_.jpg', package = 'colocr')
 
 A few R packages are available for conducting image analysis, which is a very
 wide topic. As a result, some of us might feel at a loss when all they want to
-do is a simple co-localization calculations on a small number of microscopy
-images. 
+do is a simple co-localization analysis on a small number of microscopy images. 
+
+---
 
 The `colocr` package provides a simple straight forward workflow for loading
 images, choosing regions of interest (ROIs) and calculating co-localization
 statistics. 
 
-Included in the package, is a shiny app that can be invoked locally to 
+Included in the package, is an web app that can be invoked locally to 
 interactively select the regions of interest in a semi-automatic way.
 
 This is a description of the workflow we will be using. It comes from a paper I
@@ -33,7 +34,8 @@ published to describe the `colocr` package.
 knitr::include_graphics('https://dfzljdn9uc3pi.cloudfront.net/2019/7255/1/fig-5-2x.jpg')
 ```
 
-We will be using several functions from `colocr` to run it step by step.
+We will be using several functions from `colocr` to apply the workflow  step by 
+step.
 
 But before that we need to understand how images are represented in R and how to
 read and manipulate them. 
@@ -51,9 +53,11 @@ colocalization in biological microscopy. Am J Physiol Cell Physiol.
 ## Understanding images 
 
 The images we will be using come from the DU145 prostate cancer cell line. In 
-this experiment, the cell line was treated with probes for two proteins RKIP and
+this experiment, the cell line was stained with probes for two proteins RKIP and
 LC3. The aim of this experiment is to determine, how much of the two proteins 
 are co-localized or co-distributed in the particular cell line.
+
+---
 
 We will first learn how to load these images in R and look inside the object to
 see how R represent images in numbers and coordinates.
@@ -70,7 +74,7 @@ command.
 library(colocr)
 ```
 
-The package provide a convenient functions to load images in R. It's called 
+The package provides a convenient function to load images in R. It's called 
 `image_load`. The following code locates the image file and read it in an object
 called `img`.
 
@@ -79,7 +83,7 @@ called `img`.
 img <- image_load(image1_file)
 ```
 
-Print the object image and try to answer the following questions about it.
+Print the object `img` and try to answer the following questions about it.
 
 ```{r img}
 # load image
@@ -112,10 +116,12 @@ quiz(
 )
 ```
 
+---
+
 Now, to get a deeper understanding of this object, we can transform it into a 
-`data.frame` and have a look at it. There is a few ways to do this. Use the 
+`data.frame` and have a look at it. There are a few ways to do this. Use the 
 function `as.data.frame` to transform the object and then call `str` or `head` 
-on the return object. Try this out here
+on the return object. Try this out here.
 
 ```{r str,exercise=TRUE,exercise.setup='img'}
 # transform the object into a data.frame
@@ -138,8 +144,8 @@ head(img_df)
 
 Now that you have seen the image as a familiar `data.frame`, try to guess what
 each column in it means. You can play with the code above to inspect the
-dimensions and the unique values in each column to help you answer these
-questions. The functions `dim` and `unique` should be helpful.
+dimensions and the unique values in each column to help you answer the
+questions. The functions `dim` and `unique` can be helpful.
 
 ```{r quiz2}
 quiz(
@@ -167,14 +173,16 @@ quiz(
 Another way to find out the number of rows in the `data.frame` is to multiply
 the image width x the height x the number of channels from before. Go on and try
 multiplying these numbers and see if they match what you expect as the number of
-rows.
+rows in `img`.
 
 ```{r nrow,exercise=TRUE}
 # multiply width x height x channels
 ```
 
-The word channel here refer to the colors red and green. In this particular
-image, RKIP was labeled red, LC3 green and the nucleus blue. Channels 1, 2 and 3
+---
+
+The word 'channel' here refer to the colors red, blue, and green. In this image, 
+RKIP was labeled red, LC3 green and the nucleus blue. Channels 1, 2 and 3
 refer to the red, green and blue colors. 
 
 The following code uses a function called `channel` from the `imager` package
@@ -206,22 +214,24 @@ make sure they match the expectations. Similarly, `roi_check` can be used to
 visualize the pixel intensities of the selected regions. The second step is 
 calling `roi_test` to calculate the co-localization statistics.
 
-We will examine each of these functions in turn in the coming topics
+We will examine each of these functions in turn in the coming sections.
 
 ## Selecting regions of interest 
 
-Typically, one wants to select the regions of the image occupied by a cell or a 
-group of cells. The package can also be used to select certain areas/structures 
+Typically, one wants to select the regions in the image occupied by a cell or a 
+group of cells. `colocr` can also be used to select certain areas/structures 
 within the cell if they are distinct enough. 
+
+---
 
 The function `roi_select` relies on different algorithms from the `imager` 
 package. However, using the functions to select the ROIs doesn't require any 
-background knowledge in the workings of the algorithms and can be done through 
+background knowledge of the workings of the algorithms and can be done through 
 trying different parameters and choosing the most appropriate ones. 
 
 By default, the largest contiguous region of the image is selected, more regions
 can be added using the argument `n`. The details of the other inputs are 
-documented in the function help page `?roi_select`.
+documented in the function's help page `?roi_select`.
 
 Go on and open the help page of `roi_select` and familiarize yourself withe the
 different parameters.
@@ -229,6 +239,8 @@ different parameters.
 ```{r help,exercise=TRUE}
 # open the help page of roi_select
 ```
+
+---
 
 The code below loads the image as before and calls `roi_selct` on it. In 
 addition, the code specifies 90 as the threshold. Thresholding means all values
@@ -244,7 +256,7 @@ img_rois <- roi_select(img, threshold = 90)
 img_rois
 ```
 
-This function returns `cimg` object containing the original input image and an 
+This function returns a `cimg` object containing the original input image and an 
 added attribute called `label` which indicates the selected regions. `label` is 
 a vector of `integer`s; with 0 indicating the non-selected pixels and 1 for the 
 selected regions.
@@ -269,10 +281,12 @@ str(label)
 unique(label)
 ```
 
-Now, to make sure these parameters are appropriately encompassing the ROIs, call
+---
+
+Now, to make sure these parameters are appropriately encompassing the ROI, call
 the `roi_show` to visualize side by side the original merge picture, a low 
 resolution picture of the ROI and the images from the two different channels 
-highlighted by the ROIs.
+highlighted by the ROI.
 
 ```{r show,exercise=TRUE,exercise.setup='roi',out.width="70%",fig.align='center'}
 # select ROI and show the results
@@ -281,7 +295,7 @@ roi_show(img_rois, ind = c(1, 2))
 ```
 
 Now, try to modify the code above to visualize channels 1 and 3 instead of 1 and
-2. There is an argument `ind` that takes the integers corresponding to the 
+2. There is an argument, `ind`, which requires the integers corresponding to the 
 channels you want to show. 
 
 ```{r show2,exercise=TRUE,exercise.setup='roi',out.width="70%",fig.align='center'}
@@ -296,14 +310,17 @@ par(mfrow = c(2,2), mar = rep(1, 4))
 roi_show(img_rois, ind = c(1, 3))
 ```
 
+---
+
 Arguably, selecting the regions of interest is the most time consuming step in 
 this kind of analysis. Usually, one has to do this selection by hand when using 
 image analysis software such as [imageJ](https://imagej.nih.gov/ij/). This 
 package only semi-automates this step, but still relies on the user's judgment 
 on which parameters to use and whether or not the selected ROIs are appropriate.
-To make life easier, the package provides a simple shiny app to interactively determine these parameters and use it in the rest of the workflow. 
+To make life easier, the package provides a simple shiny app to interactively 
+determine these parameters and use it in the rest of the workflow. 
 
-To launch the app run the following
+To launch the app, you use the following.
 
 ```{r colocr_app2,echo=TRUE,eval=FALSE}
 # run the shiny app
@@ -311,7 +328,7 @@ colocr_app()
 ```
 
 And here is a screen shot from the app after applying the same parameters used
-previously.
+above to a similar image.
 
 ```{r app_screenshot, echo=FALSE, out.width="50%",fig.align='center'}
 # show the screen shot of the shiny app
@@ -320,18 +337,19 @@ knitr::include_graphics('https://i.ibb.co/q9kwK2C/app.png')
 
 Although this app was designed to be invoked from within the package to help the
 users to choose the selection parameters interactively, it's a stand alone app 
-and can run the same analysis described here. The app can be accessed from the 
-web [here](https://mahshaaban.shinyapps.io/colocr_app2/).
+and can run the same analysis described here. 
+
+The app can also be accessed from the web [here](https://mahshaaban.shinyapps.io/colocr_app2/).
 
 We won't be discussing the app any further, but you can always click the link
 and check it for yourself.
 
-Next we turn to the main purpose of the package, with is calculating the
+Next we turn to the main purpose of the package, which is calculating the
 co-localization statistics between two channels.
 
 ## Calculating Correlation Statistics 
 
-Let's start by discussing two of the co-localization statistics that are 
+Let's start by discussing the two co-localization statistics that are 
 implemented in the `colocr` package. For thorough and formal details, check this
 article by [Dunn et al.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3074624/).
 
@@ -341,7 +359,7 @@ Pearson's correlation coefficient (PCC) is the co-variance of the pixel
 intensity from the two channels. The mean of the intensities is subtracted from 
 each pixel which makes the coefficient independent of the background level.
 
-The PCC is calculated as follows
+The PCC is calculated as follows:
 
 $$
 PCC = \frac{\sum_i{(R_i-\bar R)\times(G_i-\bar G)}}{\sqrt{\sum_i{(R_i-\bar R)^2\times\sum_i(G_i-\bar G)^2}}}
@@ -365,6 +383,8 @@ $$
 
 where $R_i$ and the $G_i$ is the intensities of the red and green channels.
 
+---
+
 The `colocr` package implements both PCC and SCC. Invoking the test is a one 
 function call on the selected regions of interest. 
 
@@ -379,7 +399,7 @@ img_rois <- roi_select(img, threshold = 90)
 ```
 
 Now we need to call a function called `roi_test` with the region of interest as
-the only argument.
+the first argument, and the type of co-localization statistics second.
 
 ```{r test,exercise=TRUE,exercise.setup='roi'}
 # Calculate the PCC
@@ -402,7 +422,7 @@ tst <- roi_test(img_rois, type = 'moc')
 tst
 ```
 
-The two previous exercises if executed correctly should help you decide on the 
+The two previous exercises, if executed correctly, should help you decide on the 
 answers to the following question.
 
 ```{r quiz3}
@@ -416,7 +436,7 @@ question(
 
 So far we have been working with a single image and a single region of interest.
 In the following section, you will learn how to select and test multiple regions 
-of interest and in the practice you will be working with more than one images.
+of interest.
 
 ## Selecting a multiple regions 
 
@@ -424,6 +444,8 @@ In this section, we will be working with another image from the same experiment.
 The image is available at the path `image2_file`. We want to select the all
 cells as regions of interest and make sure no background is included in the 
 selected region.
+
+---
 
 To do that, we first need to load the image in R using `image_load`.
 
@@ -482,6 +504,8 @@ img2_roi <- roi_select(img2,
                        n = 3)
 ```
 
+---
+
 To make sure everything went fine, use `roi_show` just like before to display
 the image with regions of interests highlighted.
 
@@ -495,6 +519,8 @@ par(mfrow = c(2,2), mar = rep(1, 4))
 par(mfrow = c(2,2), mar = rep(1, 4))
 roi_show(img2_roi)
 ```
+
+---
 
 To complete the workflow, also call `roi_test` like before and inspect the
 results. You need to call the function twice, once for each type of statistics
