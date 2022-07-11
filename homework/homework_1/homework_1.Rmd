@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 In this homework problem, we will be building a `data.frame`. I will describe 
 the final shape of the object and give you some hints on which functions to use.
-However, as you learned in the previous sections, there are ways to find more
+However, as you've learned in the previous sections, there are ways to find more
 about the functions you need, `?<function>` being the fastest one.
 
 ---

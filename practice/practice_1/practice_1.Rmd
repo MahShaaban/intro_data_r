@@ -32,7 +32,7 @@ will come to appreciate how easy it is to do data analysis in R.
 
 ---
 
-There are a few things you need to know to get started using R. These are 
+There are a few things you need to know to get started using R. These are things
 called variables, functions, data types, data frames and subsetting. We will 
 go through these one by one. Along the way you will learn about other things 
 such as storing data and performing arithmetic.
@@ -93,7 +93,7 @@ you can create it yourself. Let's see how this works.
 
 ---
 
-Here is a code that stores the values `1`, `2`, and `3` in a variable called `x`
+Here is code that stores the values `1`, `2`, and `3` in a variable called `x`
 and prints it out.
 
 ```{r fun1,echo=TRUE}
@@ -123,11 +123,10 @@ length(x)
 ```
 
 I think you can appreciate now why storing values in variables can be useful.
-We achieved this through the function `c`. But functions can do much more. They
-can sum and count items in a variable.
+We achieved this through the function `c`. But functions can do much more.
 
 Let's use one more. The function `mean` takes a variable and returns 
-its mean (average). `x` is now assigned big numbers at its probably difficult
+its mean (average). `x` is now assigned big numbers and its probably difficult
 to guess the average, so try calling `mean` on `x`.
 
 ```{r fun3,exercise=TRUE}
@@ -190,7 +189,7 @@ later.
 
 ---
 
-There is a function called `function` that is used to create a function. Just in
+There is a function called `function` that is used to create functions. Just in
 the last sentence, I have used the word "function" three times. You might be 
 surprised to discover that it is much easier to express that thought in code.
 
@@ -204,7 +203,7 @@ newfun(x)
 ```
 
 Congratulations. You just created your first R function. This function `newfun`
-takes as an input a variable `x` and computes its mean. It does it by dividing
+takes as an input a variable `x` and computes its mean. It does this by dividing
 the sum by the length of the variable.
 
 ```{r quest-3}
@@ -268,7 +267,7 @@ each has to be coded in a specific way. For example
 
 - Integers are signified by `L` after the number.
 - Characters are enclosed between single quotes `''` or double quotes `""`.
-- Logicals are upper case without quotes.
+- Logicals are uppercase without quotes.
 
 These variables also behave differently. You will come to appreciate them in
 time since they make things easier when it comes to data analysis.
@@ -291,8 +290,8 @@ question(
 
 ---
 
-You can convert some data types into others. Often a function `as.<class>` exist
-to do just that. For example there are `as.integer`, `as.numeric`, 
+You can convert some data types into others. Often an `as.<class>` function 
+exists to do just that. For example there are `as.integer`, `as.numeric`, 
 `as.character` and `as.logical`. Try calling these functions on the variable 
 `num` and examine the output.
 
@@ -338,9 +337,9 @@ quiz(
 ```
 
 You might be wondering why these variables behave the way they do. Mainly, each
-of these types has a direct analogy in the real world data you will be analyzing
-they make life easier for you and your computer, but at the cost of a bit of 
-confusion such as the one you feel right now.
+of these types has a direct analogy to the real-world data.
+It makes life easier for you and your computer, but at the cost of a bit of 
+confusion like the one you are feeling right now.
 
 ---
 
@@ -373,13 +372,13 @@ Each of the variables (`vector`s) above had one type of data in them. This is a
 simple and useful way of encoding data. However, most of the time data will come
 in tables, and in mixed types: numbers, characters and all.
 
-The next section will take you through one way to have tables with different 
+The next section will take you through one way to make tables with different 
 types of data in them. These are called "Data frames".
 
 ## Data frames 
 
-`data.frame`s are basically tables. The consist of rows and columns. Columns can
-have different types of data. While learning to do data analysis in R, 
+`data.frame`s are basically tables. They consist of rows and columns. Columns 
+can have different types of data. While learning to do data analysis in R, 
 `data.frame`s are probably the most important data structure and the most 
 commonly used.
 
@@ -406,10 +405,10 @@ y <- rep(c('A', 'B'), each = 3)
 d <- data.frame(x, y)
 ```
 
-The `data.frame` we just created consist of two columns: `x` and `y`. We created
-`x` and `y` by repeating two values `c(1, 2)` and `c('A', 'B')`, 3 times each.
-The function `data.frame`, takes as input the columns and returns, well, a 
+The `data.frame` we just created consists of two columns: `x` and `y`. We 
+created `x` and `y` by repeating two values `c(1, 2)` and `c('A', 'B')`, 3 times each. The function `data.frame`, takes as input the columns and returns, well, a 
 `data.frame`.
+
 --
 
 This object, `d`, is small, so you can print it out in its entirety without a 
@@ -454,7 +453,7 @@ question(
 )
 ```
 
-That's it about `data.frame`s for now. We will be using them in again soon. But 
+That's it about `data.frame`s for now. We will be using them again soon. But 
 first, you need to learn how to break them down into pieces, otherwise known as
 "subsetting", which is what we turn to next.
 
@@ -482,7 +481,7 @@ str(d)
 ```
 
 Say we are only interested in the first column, `x`. Here, is a way to subset it
-from `d` and create a new `data.frame` called `dx`. Run the code and call `str`
+from `d` and create a new variable called `dx`. Run the code and call `str`
 on the output.
 
 ```{r frame4,exercise=TRUE,exercise.setup='df'}
@@ -523,7 +522,7 @@ d[1,]
 ```
 
 In the code above, we used square brackets `[]` and inside them, the indecies of
-the columns or rows we needed.
+the columns or rows we wanted.
 
 ---
 
