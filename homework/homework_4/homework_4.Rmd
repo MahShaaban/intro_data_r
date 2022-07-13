@@ -22,7 +22,7 @@ to another.
 ---
 
 Let's first start by loading the images in a single list. I located the files
-in character vector and named it `img_files`. 
+in a character vector and named it `img_files`. 
 
 ```{r img_files,echo=TRUE}
 # locate image files
@@ -47,9 +47,8 @@ img_list <- image_load(img_files)
 
 ---
 
-Now we will select the regions of interest and test applying the same parameters
-to both images. Only set `threshold = 90` and leave the rest with the default
-values.
+Now we will select the regions of interest with the same parameters for both 
+images. Only set `threshold = 90` and leave the rest with the default values.
 
 ```{r imgs}
 # load two images at once
@@ -95,9 +94,9 @@ imgs_roi <- roi_select(img_list, threshold = threshold_list)
 roi_test(imgs_roi)
 ```
 
-Changing the threshold value in `roi_select` often results in different value of
-the co-localization statistics. Therefore, you should select the parameters 
-sensibly and often check how they change the selected regions. We discussed the 
+Changing the threshold value in `roi_select` often results in different values
+of the co-localization statistics. Therefore, you should select the parameters 
+sensibly and check how they change the selected regions. We discussed 
 `roi_show` which is designed for this purpose. 
 
 ---

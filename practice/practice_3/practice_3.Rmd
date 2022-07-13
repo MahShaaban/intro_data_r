@@ -12,7 +12,7 @@ library(pcr)
 
 ## Overview
 
-Quantitative real-time PCR is an important technique in medicine and bio-medical
+Quantitative real-time PCR is an important technique in medicine and biomedical
 research. The `pcr` package provides a unified interface for quality assessing, 
 analyzing and testing qPCR data for statistical significance.
 
@@ -44,10 +44,9 @@ doi: [10.1186/1471-2105-7-85](https://pubmed.ncbi.nlm.nih.gov/16504059/).
 
 ## Double delta $C_T$ ($\Delta\Delta C_T$) method  
 
-
-In a real time PCR assay, a reaction is quantified by detecting fluorescent 
-signal. The signals are reported as $C_T$ values (cycle threshold). $C_T$ levels
-are inversely proportional to the amount of template in the reaction.
+In a real-time qPCR assay, a reaction is quantified by detecting fluorescence 
+signals. The signals are reported as $C_T$ values (cycle threshold). $C_T$ 
+levels are inversely proportional to the amount of template in the reaction.
 
 The comparative methods for analyzing $C_T$ values make three assumptions
 
@@ -129,13 +128,13 @@ question(
 ```
 
 In the next section, you will learn about the `pcr` package and `pcr_analyze` 
-function that implement the $\Delta\Delta C_T$ model and more.
+function that implements the $\Delta\Delta C_T$ model and more.
 
 ## Analyzing $C_T$ values
 
 In this section, we will be using the `pcr` package to analyze $C_T$ values of
-C-Myc (MYC) in brain and kidney tissues. The goal is to estimate the relative 
-expression of the gene these tissues.
+C-Myc (MYC) in brains and kidney tissues. The goal is to estimate the relative 
+expression of the gene in these tissues.
 
 ---
 
@@ -211,7 +210,7 @@ question(
 ```
 
 To see how the data look like, go on and inspect the first three rows of the
-data.frame using `head`
+`data.frame` using `head`
 
 ```{r head, exercise=TRUE}
 # show first three rows of ct1
@@ -258,7 +257,7 @@ question(
 
 ---
 
-Now, we can put all these pieces together in one function call to `pcr_analyze`.
+Now, we can put these pieces together in one function call to `pcr_analyze`.
 Go on and run this code and inspect the output.
 
 ```{r call-setup}
@@ -317,8 +316,8 @@ This function required four different inputs
 
 1. `ct1`: the `data.frame` with the $C_T$ values
 2. `group_var`: a variable with as many items as the number of rows in `ct1`
-3. `reference_gene` which we sat as `'GAPDH'`
-4. `reference_group` which we sat as `'brain'`
+3. `reference_gene` which we set as `'GAPDH'`
+4. `reference_group` which we set as `'brain'`
 
 Go on and execute the code below and see if you get similar results.
 
@@ -396,7 +395,7 @@ require different assumptions. So the choice of which test to use depends on
 many factors.
 
 1. The number of the conditions/groups
-2. The sample and replicate sizes 
+2. The number of replicates 
 3. The type of desired comparison
 
 ---
@@ -425,7 +424,7 @@ using a simple `t.test` to compare the relative expression of MYC in brain and
 kidney tissues. 
 
 Just like before, we call `pcr_test` with the same inputs. Give it a try and
-compare the output put table to that of `pcr_analyze`.
+compare the output table to that of `pcr_analyze`.
 
 ```{r call3-setup}
 library(pcr)
@@ -445,7 +444,7 @@ pcr_test(ct1,
 ```
 
 That's all there is to it. If you ran the code above correctly, you should get a
-1 by 5 output table and be able to answer the following questions about it.
+1 by 5 output table and be able to answer the following questions.
 
 ```{r quiz4}
 quiz(

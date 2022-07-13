@@ -14,8 +14,8 @@ image2_file <- system.file('extdata', 'Image0003_.jpg', package = 'colocr')
 
 ## Overview 
 
-A few R packages are available for conducting image analysis, which is a very
-wide topic. As a result, some of us might feel at a loss when all they want to
+A few R packages are available for conducting image analysis.
+As a result, some of us might feel at a loss when all they want to
 do is a simple co-localization analysis on a small number of microscopy images. 
 
 ---
@@ -34,8 +34,7 @@ published to describe the `colocr` package.
 knitr::include_graphics('https://dfzljdn9uc3pi.cloudfront.net/2019/7255/1/fig-5-2x.jpg')
 ```
 
-We will be using several functions from `colocr` to apply the workflow  step by 
-step.
+We will be using the functions in `colocr` to apply the workflow step by step.
 
 But before that we need to understand how images are represented in R and how to
 read and manipulate them. 
@@ -53,13 +52,13 @@ colocalization in biological microscopy. Am J Physiol Cell Physiol.
 ## Understanding images 
 
 The images we will be using come from the DU145 prostate cancer cell line. In 
-this experiment, the cell line was stained with probes for two proteins RKIP and
+this experiment, the cells were stained with probes for two proteins RKIP and
 LC3. The aim of this experiment is to determine, how much of the two proteins 
-are co-localized or co-distributed in the particular cell line.
+are co-localized or co-distributed in these cells.
 
 ---
 
-We will first learn how to load these images in R and look inside the object to
+We will first learn how to load images in R and look inside the object to
 see how R represent images in numbers and coordinates.
 
 To do that, we first need to load the `colocr` package using the `library`
@@ -145,7 +144,7 @@ head(img_df)
 Now that you have seen the image as a familiar `data.frame`, try to guess what
 each column in it means. You can play with the code above to inspect the
 dimensions and the unique values in each column to help you answer the
-questions. The functions `dim` and `unique` can be helpful.
+questions. The functions `dim` and `unique` would be helpful.
 
 ```{r quiz2}
 quiz(
@@ -181,13 +180,13 @@ rows in `img`.
 
 ---
 
-The word 'channel' here refer to the colors red, blue, and green. In this image, 
-RKIP was labeled red, LC3 green and the nucleus blue. Channels 1, 2 and 3
+The word 'channel' here refers to the colors red, blue, and green. In this 
+image, RKIP was labeled red, LC3 green and the nucleus blue. Channels 1, 2 and 3
 refer to the red, green and blue colors. 
 
 The following code uses a function called `channel` from the `imager` package
 to isolate the first two colors. Then, the code plots the full merged image and
-the first two colors separately.
+the first two color channels separately.
 
 ```{r read,exercise=TRUE,exercise.setup='img'}
 # isolate channels
@@ -203,7 +202,7 @@ plot(img2, axes = FALSE, main = 'LC3')
 ```
 
 The `colocr` package provides a straight forward workflow for determining the 
-amount of co-localization. This workflow consists of two steps only:
+amount of co-localization. This workflow consists of two steps:
 
 1. Choosing regions of interest (ROI)
 2. Calculating the correlation between the pixel intensities
@@ -231,9 +230,9 @@ trying different parameters and choosing the most appropriate ones.
 
 By default, the largest contiguous region of the image is selected, more regions
 can be added using the argument `n`. The details of the other inputs are 
-documented in the function's help page `?roi_select`.
+documented in the function's help page.
 
-Go on and open the help page of `roi_select` and familiarize yourself withe the
+Go on and open the help page of `?roi_select` and familiarize yourself withe the
 different parameters.
 
 ```{r help,exercise=TRUE}
@@ -283,8 +282,8 @@ unique(label)
 
 ---
 
-Now, to make sure these parameters are appropriately encompassing the ROI, call
-the `roi_show` to visualize side by side the original merge picture, a low 
+Now, to make sure these parameters appropriately encompass the ROI, call
+the `roi_show` to visualize side by side the original merge picture, a low- 
 resolution picture of the ROI and the images from the two different channels 
 highlighted by the ROI.
 
@@ -295,7 +294,7 @@ roi_show(img_rois, ind = c(1, 2))
 ```
 
 Now, try to modify the code above to visualize channels 1 and 3 instead of 1 and
-2. There is an argument, `ind`, which requires the integers corresponding to the 
+2. There is an argument, `ind`, that takes the integers corresponding to the 
 channels you want to show. 
 
 ```{r show2,exercise=TRUE,exercise.setup='roi',out.width="70%",fig.align='center'}
@@ -317,8 +316,8 @@ this kind of analysis. Usually, one has to do this selection by hand when using
 image analysis software such as [imageJ](https://imagej.nih.gov/ij/). This 
 package only semi-automates this step, but still relies on the user's judgment 
 on which parameters to use and whether or not the selected ROIs are appropriate.
-To make life easier, the package provides a simple shiny app to interactively 
-determine these parameters and use it in the rest of the workflow. 
+The package provides a simple shiny app to interactively determine these 
+parameters.
 
 To launch the app, you use the following.
 
@@ -327,7 +326,7 @@ To launch the app, you use the following.
 colocr_app()
 ```
 
-And here is a screen shot from the app after applying the same parameters used
+Here is a screen shot from the app after applying the same parameters used
 above to a similar image.
 
 ```{r app_screenshot, echo=FALSE, out.width="50%",fig.align='center'}
@@ -365,7 +364,7 @@ $$
 PCC = \frac{\sum_i{(R_i-\bar R)\times(G_i-\bar G)}}{\sqrt{\sum_i{(R_i-\bar R)^2\times\sum_i(G_i-\bar G)^2}}}
 $$
 
-where $R_i$ and the $G_i$ is the intensities of the red and green channels and 
+where $R_i$ and the $G_i$ are the intensities of the red and green channels and 
 the $\bar R$ and $\bar G$ are the average intensities.
 
 PCC value of 1 means positive and -1 negative perfect correlation. 0 means there
@@ -381,11 +380,11 @@ $$
 MOC = \frac{\sum_i{(R_i\times G_i)}}{\sqrt{\sum_i{R_i^2\times\sum_i G_i^2}}}
 $$
 
-where $R_i$ and the $G_i$ is the intensities of the red and green channels.
+where $R_i$ and the $G_i$ are the intensities of the red and green channels.
 
 ---
 
-The `colocr` package implements both PCC and SCC. Invoking the test is a one 
+The `colocr` package implements both PCC and SCC. Invoking the test is a one- 
 function call on the selected regions of interest. 
 
 Let's repeat the steps we have taken to get to the region of interest.
@@ -399,7 +398,7 @@ img_rois <- roi_select(img, threshold = 90)
 ```
 
 Now we need to call a function called `roi_test` with the region of interest as
-the first argument, and the type of co-localization statistics second.
+the first argument, and the type of co-localization statistics as the second.
 
 ```{r test,exercise=TRUE,exercise.setup='roi'}
 # Calculate the PCC
@@ -423,7 +422,7 @@ tst
 ```
 
 The two previous exercises, if executed correctly, should help you decide on the 
-answers to the following question.
+answer to the following question.
 
 ```{r quiz3}
 question(
@@ -507,7 +506,7 @@ img2_roi <- roi_select(img2,
 ---
 
 To make sure everything went fine, use `roi_show` just like before to display
-the image with regions of interests highlighted.
+the image with the regions of interests highlighted.
 
 ```{r show3,exercise=TRUE,exercise.setup='rois'}
 # inspect the selected regions 

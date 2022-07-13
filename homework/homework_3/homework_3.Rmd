@@ -10,14 +10,14 @@ knitr::opts_chunk$set(echo = FALSE)
 library(pcr)
 ```
 
-Now that you've learned to use `pcr` functions to analyze, visualize and test
+Now that you've learned to use `pcr` functions to model, visualize and test
 $C_T$ values, you are ready to perform the full analysis on your own. 
 
 The following is a description of the problem you need to solve. The data and
 code are very similar to what you have seen in the practice session with one 
-wrinkle. Read the description bellow and see if you can spot the difference. 
+wrinkle. Read the description below and see if you can spot the difference. 
 Once you do that, you will need to find a way to modify the code to accommodate
-this difference and complete the analysis properly.
+this difference and complete the analysis.
 
 ---
 
@@ -27,7 +27,7 @@ dataset is very similar to `ct1`, however, they differ in one important aspect.
 You will need to read the help pages of these datasets and figure out what this 
 difference is and modify your code accordingly.
 
-Here, are a few things you need to keep in mind
+Here, are a few things to keep in mind
 
 1. You need to load the `pcr` library to get access to the data and functions
 2. To get the help page, use `?` followed by the name of the dataset or function
@@ -35,7 +35,7 @@ Here, are a few things you need to keep in mind
 4. `pcr_analyze` is just an interface for other functions. The one relevant to 
 this exercise is `pcr_ddct`
 
-The following is just an R prompt for you to work in.
+The following is an R prompt for you to work in.
 
 ```{r practice, exercise=TRUE}
 # load pcr library

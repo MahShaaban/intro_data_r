@@ -23,12 +23,12 @@ d2$V2 <- ifelse(d2$V3 == 'B', d2$V2 + 2, d2$V2)
 
 ## What is statistics? 
 
-Statistics is the practice concerned with collecting and analyzing data. The
+Statistics is the practice concerned with collecting and analyzing data. This
 interactive practice is not strictly about statistics but rather, about doing
 the basic statistical summarizing and testing in R.
 
-We will only be looking at a few ideas in statistics that we need for the 
-upcoming modules. Namely
+We will only be looking at a few ideas in statistics that are common for every
+data analysis. Namely
 
 - Summarizing data
 - Plotting data
@@ -37,12 +37,12 @@ upcoming modules. Namely
 ---
 
 We will start from where we ended in the previous module. The code below creates
-three variables and collect them in a `data.frame`. You can think of this object
-`d` as encoding data from an experiment. In the following sense
+three variables and collects them in a `data.frame`. You can think of this 
+object, `d`, as encoding data from an experiment. In the following sense
 
-- `V1` the sample ID
-- `V2` measurements
-- `V3` a grouping variable
+- `V1`: the sample ID
+- `V2`: measurements
+- `V3`: a grouping variable
 
 ```{r df,echo=TRUE}
 # create an index variable
@@ -63,8 +63,8 @@ str(d)
 ```
 
 Next, we will introduce some bias in the measurements and try to explore and 
-retrieve it using statistical tools. Here is a code that adds 1 to the 
-measurements of the group `'B'`, and leaves `'A'` as is.
+retrieve it using statistical tools. Here is code that adds 1 to the 
+measurements of group `'B'`, and leaves `'A'` as is.
 
 ```{r df2,echo=TRUE}
 # copy object d to d2
@@ -78,14 +78,14 @@ d2[, 'V2'] <- ifelse(d[, 'V3'] == 'B',
 str(d2)
 ```
 
-Use `str`, `head` or `tail` to check whether the code above produced what it 
-aims to do. In the next section, we will use "summary statistics" to explore the
-bias we introduce between the groups.
+Use `str`, `head` or `tail` to check whether the code above worked. In the next
+section, we will use "summary statistics" to explore the bias we introduce 
+between the groups A and B.
 
 ## Summary statistics 
 
 Summarizing data is a sensible starting point when dealing with many data points
-. Two useful summary statistics are averages and variances.
+. Two useful summary statistics are averages and variance.
 
 ### Averages
 
@@ -93,7 +93,7 @@ Averages are single numbers that describe a list of numbers. There are more than
 one way of defining it.
 
 1. Mean: the sum divided by the length
-2. Median: the value separating the higher half from the lower half
+2. Median: the value separating the upper half from the lower half
 3. Mode: the value that appears most often
 
 ----
@@ -102,7 +102,7 @@ There are functions in R that correspond to the first two of these statistics.
 These are `mean` and `median`.
 
 Here is the code to calculate the mean for all measurements and for each of the
-two groups in the data 'A' and 'B'.
+two groups 'A' and 'B'.
 
 ```{r ave1,exercise=TRUE}
 # calculate the mean of V2
@@ -150,9 +150,9 @@ quiz(
 )
 ```
 
-These single numbers tell us something about the center of the data point. Other
-statistics can tell us how much the data points vary from each other. We 
-turn to this next.
+These single numbers tell us something about the center of the data points. 
+Other statistics can tell us how much the data points vary from each other,
+"Variance". We turn to this next.
 
 ### Variance
 
@@ -174,7 +174,7 @@ var(d2$V2)
 sd(d2$V2)
 ```
 
-Now try to calculate the these same statistics for the groups 'A' and 'B'.
+Now try to calculate the same statistics for the groups 'A' and 'B' separately.
 
 ```{r var2,exercise=TRUE}
 # calculate the variance and standard deviation for group A
@@ -193,7 +193,7 @@ var(d2$V2[d2$V3 == 'B'])
 sd(d2$V2[d2$V3 == 'B'])
 ```
 
-You should be able to answer these questions below based on the code above.
+You should be able to answer the questions below based on the code above.
 
 ```{r quiz2}
 quiz(
@@ -219,7 +219,7 @@ tools in the next section.
 
 ## Plots 
 
-There are many ways to visualize any set of data. The basic graphs such as
+There are many ways to visualize any given set of data. The basic graphs such as
 bar, line and scatter plots are indispensable. Used in the right way and context
 plots can be very illuminating. Once your data is large enough, graphs like 
 these will be the only way to explore the data and the relationships between
@@ -234,8 +234,8 @@ the bars.
 # inspect help page of barplot
 ```
 
-The only required argument you need to pass to `barplot` is called `height`, the
-rest is optional (to make the plot look pretty). Here is an example
+The only required argument to `barplot` is called `height`, the rest is optional
+(to make the plot look pretty). Here is an example
 
 ```{r bar2,echo=TRUE}
 # plot 1 to 3
@@ -243,7 +243,7 @@ barplot(1:3)
 ```
 
 Now, try plotting the `mean`s of the variable `d2$V2` for each group in `d2$V3`.
-Remember, you can can calculate the means just like before and save the results
+Remember, you can calculate the means just like before and save the results
 in a variable of your choice, then pass this variable to `barplot`
 
 ```{r bar3,exercise=TRUE}
@@ -295,8 +295,9 @@ box()
 Another basic plot you can make is the point plot. The function `plot` creates
 points with two coordinates 'x' and 'y'.
 
-Here is code to to plot all three variables in the object `d2`, which we created
-earlier. The code puts `V1` on the x-axis, `V2` on the y-axis and color by `V3`.
+Here is code to plot all three variables in the object `d2`, which we created
+earlier. The code puts `V1` on the x-axis, `V2` on the y-axis and colors the 
+points by `V3`.
 
 ```{r point,echo=TRUE}
 # plot all three variables
@@ -318,11 +319,21 @@ plot(x = d2$V1,
      col = as.factor(d2$V3))
 ```
 
+```{r point2-solution}
+# plot all three variables
+# as factor is necessary to force A and B to colors
+plot(x = d2$V1,
+     y = d2$V2,
+     col = as.factor(d2$V3),
+     xlab = 'Variable 1',
+     ylab = 'Variable 2')
+```
+
 ### Histogram plot
 
 The third and last type of plot we will discuss is called a histogram. 
 Histograms count the frequency of data points within specified ranges. In other 
-word, it divides the data into ranges called 'bins' and count how many  data 
+words, it divides the data into ranges called 'bins' and counts how many data 
 points occur in each bin.
 
 The function `hist` can do that for you.
@@ -356,8 +367,8 @@ quiz(
 
 ## Tests 
 
-Looking at the mean, variance, and plots we made, you can easily tell that 
-the bias we introduced in the group 'B' is there. Now, we introduced this 
+Looking at the mean, variance, and plots, you can easily tell that 
+the bias we introduced in the group 'B' is there. We introduced this 
 difference intentionally. But in most cases, this would be the exact question we
 ask of the data. Is there a difference between the measurements of the groups?
 
@@ -366,7 +377,7 @@ One way to answer this kind of question is to use statistical tests.
 ---
 
 Choosing which test to use, indeed whether you should use tests at all or 
-whether the mean anything is beyond the topic at hand.
+whether they mean anything is not discussed.
 
 Here is code that applies the a t-test to the two groups, 'A' and 'B'.
 

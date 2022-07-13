@@ -16,7 +16,7 @@ V2 <- rnorm(50, mean = .5 * V1)
 d3 <- data.frame(V1, V2)
 ```
 
-The dataset `d3` consist of two variables: `V1` and `V2`. Looking at the plot 
+The dataset `d3` consists of two variables: `V1` and `V2`. Looking at the plot 
 below, we can tell that the two variables are correlated, but it is hard to tell
 by how much and whether the correlation is a significant one.
 
