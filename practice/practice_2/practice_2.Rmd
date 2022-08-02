@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = FALSE, fig.width = 5, fig.height = 5, fig.align = '
 
 # global variable
 # create a grouping variable
+set.seed(123)
 d <- data.frame(
   V1 = 1:30,
   V2 = rnorm(30, mean = 0, sd = 1),
