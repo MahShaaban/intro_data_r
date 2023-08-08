@@ -1,3 +1,6 @@
+[![Build and push Docker image](https://github.com/MahShaaban/intro_data_r/actions/workflows/docker-image.yml/badge.svg)](https://github.com/MahShaaban/intro_data_r/actions/workflows/docker-image.yml)
+[![Deploy tutorials](https://github.com/MahShaaban/intro_data_r/actions/workflows/deploy-tutorials.yml/badge.svg)](https://github.com/MahShaaban/intro_data_r/actions/workflows/deploy-tutorials.yml)
+
 ## Introduction to data analysis in R
 
 ### Description
